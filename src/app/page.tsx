@@ -1,10 +1,10 @@
 // src/app/page.tsx
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth/authOptions'; 
-import { redirect } from 'next/navigation';
+import { authOptions } from '@/lib/auth/authOptions';
 
-export default async function Home() {
+export default async function RootPage() {
   const session = await getServerSession(authOptions);
   
   // If user is logged in, redirect to dashboard

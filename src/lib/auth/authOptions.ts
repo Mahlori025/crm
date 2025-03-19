@@ -1,8 +1,9 @@
 // src/lib/auth/authOptions.ts
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
 import { query } from "../db";
-import bcrypt from "bcrypt";
+import { Role } from "@/types/user";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,55 +18,69 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const users = await query(
-          "SELECT * FROM users WHERE email = $1",
-          [credentials.email]
-        );
+        try {
+          const result = await query(
+            `SELECT id, email, name, password, role, active 
+             FROM users 
+             WHERE email = $1`,
+            [credentials.email]
+          );
 
-        if (users.length === 0) {
+          if (result.rows.length === 0) {
+            return null;
+          }
+
+          const user = result.rows[0];
+
+          if (!user.active) {
+            throw new Error("Account is disabled");
+          }
+
+          const isPasswordValid = await compare(
+            credentials.password,
+            user.password
+          );
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role as Role
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
           return null;
         }
-
-        const user = users[0];
-        const passwordMatch = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!passwordMatch) {
-          return null;
-        }
-
-        return {
-          id: user.id.toString(),
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
       }
     })
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
       }
       return token;
     },
-    session: async ({ session, token }) => {
+    async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.role = token.role;
+        session.user.id = token.id as string;
+        session.user.role = token.role as Role;
       }
       return session;
     }
   },
   pages: {
     signIn: "/auth/signin",
+    error: "/auth/signin"
   },
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET
 };
