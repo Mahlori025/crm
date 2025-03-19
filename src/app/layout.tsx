@@ -24,10 +24,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryProvider>
-          {children}
-          <DevNavigation />
-        </QueryProvider>
+        <div className="page-content">
+          <QueryProvider>
+            <main className="main-container">
+              {children}
+            </main>
+            <DevNavigation />
+          </QueryProvider>
+        </div>
       </body>
     </html>
   );

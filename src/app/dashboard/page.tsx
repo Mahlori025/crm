@@ -4,13 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Dashboard | CRM Ticket System',
+  title: 'Dashboard | Gibela Portal',
   description: 'View your support metrics and recent activity',
 };
 
 export default function DashboardPage() {
   return (
-    <div className="p-6">
+    <div className="dashboard-container">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">CRM Dashboard</h1>
         
@@ -232,96 +232,6 @@ export default function DashboardPage() {
           <Link href="/tickets?priority=high,critical" className="mt-4 inline-block text-sm text-blue-600 hover:text-blue-800 font-medium">
             View all critical tickets
           </Link>
-        </div>
-      </div>
-      
-      {/* Agent Performance */}
-      <div className="dashboard-card">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-medium">Agent Performance</h2>
-          
-          <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
-            View detailed reports
-          </button>
-        </div>
-        
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Agent</th>
-                <th>Assigned</th>
-                <th>Resolved</th>
-                <th>Avg. Response</th>
-                <th>Avg. Resolution</th>
-                <th>SLA Compliance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { 
-                  name: 'John Doe', 
-                  assigned: 12, 
-                  resolved: 10, 
-                  response: '1.2h', 
-                  resolution: '5.4h',
-                  sla: 96
-                },
-                { 
-                  name: 'Jane Smith', 
-                  assigned: 8, 
-                  resolved: 7, 
-                  response: '0.8h', 
-                  resolution: '4.2h',
-                  sla: 98
-                },
-                { 
-                  name: 'Mike Johnson', 
-                  assigned: 15, 
-                  resolved: 13, 
-                  response: '1.5h', 
-                  resolution: '6.1h',
-                  sla: 92
-                },
-                { 
-                  name: 'Sarah Williams', 
-                  assigned: 9, 
-                  resolved: 8, 
-                  response: '1.1h', 
-                  resolution: '4.8h',
-                  sla: 95
-                }
-              ].map((agent, index) => (
-                <tr key={index}>
-                  <td>
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center mr-3">
-                        {agent.name.charAt(0)}
-                      </div>
-                      {agent.name}
-                    </div>
-                  </td>
-                  <td>{agent.assigned}</td>
-                  <td>{agent.resolved}</td>
-                  <td>{agent.response}</td>
-                  <td>{agent.resolution}</td>
-                  <td>
-                    <div className="flex items-center">
-                      <div className="w-24 mr-2">
-                        <div className="h-2 bg-gray-200 rounded-full">
-                          <div 
-                            className={`h-full rounded-full ${agent.sla >= 95 ? 'bg-green-500' : agent.sla >= 90 ? 'bg-yellow-500' : 'bg-red-500'}`} 
-                            style={{ width: `${agent.sla}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                      <span className="text-sm">{agent.sla}%</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
       

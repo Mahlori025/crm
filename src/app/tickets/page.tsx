@@ -11,7 +11,7 @@ export default function TicketsPage() {
   // Note: In production, you would add authentication here
   
   return (
-    <div className="p-6">
+    <div className="tickets-container">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Tickets</h1>
         <Link 
@@ -20,6 +20,52 @@ export default function TicketsPage() {
         >
           Create Ticket
         </Link>
+      </div>
+      
+      {/* Filters */}
+      <div className="bg-white p-4 rounded-lg shadow mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+              <option value="">All Statuses</option>
+              <option value="open">Open</option>
+              <option value="assigned">Assigned</option>
+              <option value="in_progress">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+            <select className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+              <option value="">All Priorities</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+            <select className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+              <option value="">Anyone</option>
+              <option value="me">Me</option>
+              <option value="unassigned">Unassigned</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <input
+              type="text"
+              placeholder="Search tickets..."
+              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
       </div>
       
       {/* Sample Tickets */}
@@ -40,6 +86,19 @@ export default function TicketsPage() {
             </div>
           </div>
         ))}
+      </div>
+      
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
+        <p className="text-sm text-gray-500">Showing 1-5 of 25 tickets</p>
+        <div className="flex space-x-2">
+          <button className="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+            Previous
+          </button>
+          <button className="px-3 py-1 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50">
+            Next
+          </button>
+        </div>
       </div>
       
       {/* Development notice */}

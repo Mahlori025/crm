@@ -53,12 +53,12 @@ export default function SignUpPage() {
   };
   
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="landing-container">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md bg-white p-8 rounded-lg shadow-xl">
         <div className="flex justify-center">
           <Image
             src="/images/logo.png"
-            alt="Logo"
+            alt="Gibela Logo"
             width={70}
             height={70}
             className="h-14 w-auto"
@@ -67,10 +67,8 @@ export default function SignUpPage() {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create a new account
         </h2>
-      </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="mt-8">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">

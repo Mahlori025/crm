@@ -13,22 +13,55 @@
 }
 
 body {
-  /* Direct background image with no overlay */
+  /* Keep your existing background styles */
   background-image: url('/images/xtrapoli.jpeg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
   color: var(--text-primary);
 }
 
 /* Remove page-content overlay completely */
 .page-content {
-  background-color: transparent;
   min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
+.main-container {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* For landing pages (signin, signup, home) */
+.landing-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.dashboard-container, 
+.tickets-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 /* Modern dashboard card styling */
 .dashboard-card {
   background-color: var(--card-bg);
@@ -187,4 +220,16 @@ td {
 
 .sla-breached {
   background-color: #ef4444;
+}
+
+/* Add responsive adjustments */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0.5rem;
+  }
+  
+  .dashboard-container,
+  .tickets-container {
+    padding: 1rem;
+  }
 }
