@@ -1,38 +1,190 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --dark-blue: #0f172a;
+  --card-bg: #ffffff;
+  --card-blue: #38bdf8;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --chart-color: #38bdf8;
+  --highlight-color: #0284c7;
 }
 
 body {
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  /* Add global background image */
+  /* Direct background image with no overlay */
   background-image: url('/images/xtrapoli.jpeg');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Fixed position for scrolling */
+  background-attachment: fixed;
   background-repeat: no-repeat;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+  color: var(--text-primary);
 }
 
-
-/* Add a semi-transparent overlay for readability */
+/* Remove page-content overlay completely */
 .page-content {
-  background-color: rgba(255, 255, 255, 0.85); /* Adjust opacity as needed */
+  background-color: transparent;
   min-height: 100vh;
+}
+
+/* Modern dashboard card styling */
+.dashboard-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.07);
+}
+
+.metric-card {
+  color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.metric-card.blue {
+  background-color: #3b82f6;
+}
+
+.metric-card.yellow {
+  background-color: #f59e0b;
+}
+
+.metric-card.green {
+  background-color: #10b981;
+}
+
+.metric-card .metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.metric-card .arrow-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 24px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e2e8f0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #10b981;
+}
+
+.activity-item {
+  border-left: 4px solid var(--chart-color);
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.activity-item.blue {
+  border-left-color: #3b82f6;
+}
+
+.activity-item.green {
+  border-left-color: #10b981;
+}
+
+.activity-item.yellow {
+  border-left-color: #f59e0b;
+}
+
+.activity-item.red {
+  border-left-color: #ef4444;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-blue {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-green {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-yellow {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-red {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  font-weight: 500;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+}
+
+td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sla-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.sla-healthy {
+  background-color: #10b981;
+}
+
+.sla-warning {
+  background-color: #f59e0b;
+}
+
+.sla-breached {
+  background-color: #ef4444;
 }
