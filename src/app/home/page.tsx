@@ -18,7 +18,7 @@ export default async function HomePage() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="max-w-3xl mx-auto text-center">
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
-          Welcome to the CRM Ticket System
+          Welcome to the Gibela Portal
         </h1>
         
         <p className="text-lg text-gray-600 mb-10">
