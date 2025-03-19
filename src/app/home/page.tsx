@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   // If not logged in, show the home page
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="max-w-3xl mx-auto text-center">
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Welcome to the CRM Ticket System

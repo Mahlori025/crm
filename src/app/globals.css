@@ -20,7 +20,19 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Add global background image */
+  background-image: url('/images/xtrapoli.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Fixed position for scrolling */
+  background-repeat: no-repeat;
+}
+
+
+/* Add a semi-transparent overlay for readability */
+.page-content {
+  background-color: rgba(255, 255, 255, 0.85); /* Adjust opacity as needed */
+  min-height: 100vh;
 }
