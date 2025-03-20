@@ -42,9 +42,9 @@ body {
   box-sizing: border-box;
 }
 
-/* For landing pages (signin, signup, home) */
+/* ENHANCED AUTH PAGES STYLING */
 .landing-container {
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -53,6 +53,171 @@ body {
   padding: 2rem;
 }
 
+/* Auth container styling */
+.landing-container > div {
+  width: 100%;
+  max-width: 500px;
+  background-color: white;
+  background-opacity: 0.95;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Auth headings */
+.landing-container h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 1.5rem;
+}
+
+/* Auth subtitle */
+.landing-container h2 + p {
+  font-size: 1.25rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+/* Form spacing */
+.landing-container form {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+/* Form field groups */
+.landing-container form > div {
+  margin-bottom: 1.5rem;
+}
+
+/* Form inputs */
+.landing-container input[type="text"],
+.landing-container input[type="email"],
+.landing-container input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.125rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  margin-top: 0.5rem;
+}
+
+/* Form labels */
+.landing-container label {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+/* Remember me checkbox */
+.landing-container .checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.landing-container .checkbox-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+/* Submit buttons */
+.landing-container button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.landing-container button[type="submit"]:hover {
+  background-color: #1d4ed8;
+}
+
+.landing-container button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Links */
+.landing-container a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.landing-container a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.landing-container hr {
+  margin: 2rem 0;
+  border: 0;
+  height: 1px;
+  background-color: #e5e7eb;
+  position: relative;
+}
+
+.landing-container hr::before {
+  content: attr(data-content);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 0 1rem;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* Alternative action button (create account/sign in) */
+.landing-container .alternative-action {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  color: #4b5563;
+  background-color: white;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  transition: background-color 0.2s;
+}
+
+.landing-container .alternative-action:hover {
+  background-color: #f9fafb;
+  text-decoration: none;
+}
+
+/* Error messages */
+.landing-container [role="alert"] {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #b91c1c;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1.5rem;
+}
+
+/* EXISTING DASHBOARD AND TICKET STYLES */
 .dashboard-container, 
 .tickets-container {
   background-color: rgba(255, 255, 255, 0.9);
@@ -62,6 +227,7 @@ body {
   margin-top: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 /* Modern dashboard card styling */
 .dashboard-card {
   background-color: var(--card-bg);
@@ -232,4 +398,82 @@ td {
   .tickets-container {
     padding: 1rem;
   }
+  
+  /* Auth responsive adjustments */
+  .landing-container > div {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+  
+  .landing-container h2 {
+    font-size: 1.75rem;
+  }
+}
+
+
+/* Enhanced dashboard styles - add these to globals.css */
+
+/* Add hover effect to metric cards */
+.metric-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Improved dashboard card styling */
+.dashboard-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.3s, transform 0.2s;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.07);
+}
+
+/* Enhanced activity items */
+.activity-item {
+  border-left: 4px solid var(--chart-color);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0 8px 8px 0;
+  transition: transform 0.2s;
+}
+
+.activity-item:hover {
+  transform: translateX(5px);
+}
+
+/* Badge styling */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+/* SLA indicators */
+.sla-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.sla-indicator:hover {
+  transform: scale(1.2);
 }
