@@ -1,13 +1,59 @@
 // src/app/tickets/create/page.tsx
-import { Metadata } from 'next';
-import Link from 'next/link';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Create Ticket | Gibela Portal',
-  description: 'Create a new support ticket',
-};
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { TicketPriority } from '@/types/ticket';
 
 export default function CreateTicketPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    priority: TicketPriority.MEDIUM,
+    due_date: '',
+  });
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const response = await fetch('/api/tickets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to create ticket');
+      }
+      
+      const ticket = await response.json();
+      router.push(`/tickets/${ticket.id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setIsLoading(false);
+    }
+  };
+  
   return (
     <div className="tickets-container">
       <div className="mb-6">
@@ -16,27 +62,41 @@ export default function CreateTicketPage() {
       </div>
       
       <div className="bg-white p-6 rounded-lg shadow">
-        <form>
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded">
+              {error}
+            </div>
+          )}
+          
           <div className="mb-4">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-              Title
+              Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="title"
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              name="title"
+              required
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Brief description of the issue"
             />
           </div>
           
           <div className="mb-4">
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
               id="description"
+              name="description"
               rows={5}
-              className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              required
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Detailed explanation of the issue..."
             ></textarea>
           </div>
@@ -44,56 +104,57 @@ export default function CreateTicketPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-                Category
+                Category <span className="text-red-500">*</span>
               </label>
               <select
                 id="category"
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                name="category"
+                required
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Select a category</option>
-                <option value="technical">Technical Issue</option>
-                <option value="billing">Billing Question</option>
-                <option value="account">Account Management</option>
-                <option value="feature">Feature Request</option>
+                <option value="Technical Support">Technical Issue</option>
+                <option value="Billing">Billing Question</option>
+                <option value="Account Management">Account Management</option>
+                <option value="Feature Request">Feature Request</option>
+                <option value="General Inquiry">General Inquiry</option>
               </select>
             </div>
             
             <div>
               <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
-                Priority
+                Priority <span className="text-red-500">*</span>
               </label>
               <select
                 id="priority"
-                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                name="priority"
+                required
+                value={formData.priority}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="critical">Critical</option>
+                <option value={TicketPriority.LOW}>Low</option>
+                <option value={TicketPriority.MEDIUM}>Medium</option>
+                <option value={TicketPriority.HIGH}>High</option>
+                <option value={TicketPriority.CRITICAL}>Critical</option>
               </select>
             </div>
           </div>
           
-          <div className="mt-4">
-            <label htmlFor="attachments" className="block text-sm font-medium text-gray-700 mb-1">
-              Attachments (optional)
+          <div className="mb-4">
+            <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">
+              Due Date (optional)
             </label>
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg className="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                  </svg>
-                  <p className="mb-2 text-sm text-gray-500">
-                    <span className="font-semibold">Click to upload</span> or drag and drop
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    PDF, PNG, JPG or GIF (MAX. 10MB)
-                  </p>
-                </div>
-                <input id="attachments" type="file" className="hidden" />
-              </label>
-            </div>
+            <input
+              type="datetime-local"
+              id="due_date"
+              name="due_date"
+              value={formData.due_date}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
           
           <div className="flex items-center justify-end space-x-3 mt-6">
@@ -105,20 +166,13 @@ export default function CreateTicketPage() {
             </Link>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              disabled={isLoading}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create Ticket
+              {isLoading ? 'Creating...' : 'Create Ticket'}
             </button>
           </div>
         </form>
-      </div>
-      
-      {/* Development notice */}
-      <div className="mt-8 bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-        <h3 className="font-medium">Development Mode</h3>
-        <p className="text-sm mt-1">
-          Form submission is not active in development mode.
-        </p>
       </div>
     </div>
   );

@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:test": "node test-db-connection.js",
+    "db:migrate": "tsx src/lib/db/migrate.ts",
+    "db:setup": "node setup-crm-database.js",
+    "db:reset": "psql -U postgres -d crm -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;' && npm run db:setup"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.69.0",
@@ -32,6 +36,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "tailwindcss": "^4",
+    "tsx": "^4.19.4",
     "typescript": "^5"
   }
 }
