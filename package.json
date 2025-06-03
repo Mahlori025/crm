@@ -20,10 +20,16 @@
     "date-fns": "^4.1.0",
     "next": "15.2.3",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
     "pg": "^8.14.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "recharts": "^2.10.4",
+    "lucide-react": "^0.263.1",
+    "file-saver": "^2.0.5",
+    "jspdf": "^2.5.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -37,6 +43,7 @@
     "eslint-config-next": "15.2.3",
     "tailwindcss": "^4",
     "tsx": "^4.19.4",
-    "typescript": "^5"
+    "typescript": "^5",
+     "@types/file-saver": "^2.0.7"
   }
 }
