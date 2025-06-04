@@ -18,23 +18,24 @@
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "date-fns": "^4.1.0",
+    "file-saver": "^2.0.5",
+    "jspdf": "^2.5.2",
+    "lucide-react": "^0.263.1",
     "next": "15.2.3",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.10.1",
     "pg": "^8.14.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "zod": "^3.24.2",
-    "recharts": "^2.10.4",
-    "lucide-react": "^0.263.1",
-    "file-saver": "^2.0.5",
-    "jspdf": "^2.5.1",
-    "xlsx": "^0.18.5"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.15.3",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/pg": "^8.11.11",
     "@types/react": "^19",
@@ -43,7 +44,6 @@
     "eslint-config-next": "15.2.3",
     "tailwindcss": "^4",
     "tsx": "^4.19.4",
-    "typescript": "^5",
-     "@types/file-saver": "^2.0.7"
+    "typescript": "^5"
   }
 }

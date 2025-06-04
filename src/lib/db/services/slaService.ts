@@ -4,6 +4,7 @@ import * as queries from '../queries/sla';
 import { Ticket } from '@/types/ticket';
 import { notifySlaBreached } from '@/lib/notifications/in-app';
 import { sendSlaBreachEmail } from '@/lib/notifications/email';
+import { query } from '../index';
 
 // SLA configuration type
 type SlaConfig = {
@@ -128,3 +129,20 @@ async function getUsersToNotifyForSla(ticketId: number, assignedAgentId?: number
   
   return supervisorIds;
 }
+
+export const slaService = {
+  async checkSlaBreaches(): Promise<void> {
+    try {
+      await query(`
+        UPDATE tickets
+        SET sla_breached = true
+        WHERE (
+          (first_response_at IS NULL AND sla_response_due < NOW()) OR
+          (resolved_at IS NULL AND sla_resolution_due < NOW())
+        ) AND sla_breached = false
+      `);
+    } catch (error) {
+      console.error('Error checking SLA breaches:', error);
+    }
+  }
+};
