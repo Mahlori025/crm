@@ -1,10 +1,9 @@
 // src/lib/db/services/slaService.ts
-import { db } from '../index';
+import { query, transaction } from '../index';
 import * as queries from '../queries/sla';
 import { Ticket } from '@/types/ticket';
 import { notifySlaBreached } from '@/lib/notifications/in-app';
 import { sendSlaBreachEmail } from '@/lib/notifications/email';
-import { query } from '../index';
 
 // SLA configuration type
 type SlaConfig = {
@@ -23,12 +22,12 @@ export async function calculateSlaDueDates(
 ): Promise<{responseDate: Date, resolutionDate: Date} | null> {
   try {
     // Get SLA config for this priority
-    const result = await db.query(
+    const result = await query<SlaConfig>(
       'SELECT * FROM sla_configs WHERE priority = $1',
       [priority]
     );
     
-    const slaConfig = result.rows[0] as SlaConfig;
+    const slaConfig = result.rows[0];
     if (!slaConfig) {
       console.error(`No SLA configuration for priority ${priority}`);
       return null;
@@ -43,7 +42,7 @@ export async function calculateSlaDueDates(
     resolutionDate.setHours(resolutionDate.getHours() + slaConfig.resolution_time_hours);
     
     // Update ticket with SLA dates
-    await db.query(queries.updateTicketSlaQuery, [
+    await query(queries.updateTicketSlaQuery, [
       ticketId,
       responseDate,
       resolutionDate
@@ -59,8 +58,8 @@ export async function calculateSlaDueDates(
 // Function to check for SLA breaches and notify relevant parties
 export async function checkSlaBreaches(): Promise<void> {
   try {
-    const result = await db.query(queries.getBreachedSlaTicketsQuery);
-    const breachedTickets = result.rows as Ticket[];
+    const result = await query<Ticket>(queries.getBreachedSlaTicketsQuery);
+    const breachedTickets = result.rows;
     
     for (const ticket of breachedTickets) {
       // Check if this is a new breach (not previously notified)
@@ -72,7 +71,7 @@ export async function checkSlaBreaches(): Promise<void> {
           : 'resolution';
         
         // Get relevant users to notify (assigned agent, supervisors)
-        const usersToNotify = await getUsersToNotifyForSla(ticket.id, ticket.assigned_to);
+        const usersToNotify = await getUsersToNotifyForSla(ticket.id, ticket.assignee_id);
         
         // Send notifications
         for (const userId of usersToNotify) {
@@ -80,8 +79,8 @@ export async function checkSlaBreaches(): Promise<void> {
         }
         
         // If assigned to an agent, send email
-        if (ticket.assigned_to) {
-          const agentResult = await db.query('SELECT email FROM users WHERE id = $1', [ticket.assigned_to]);
+        if (ticket.assignee_id) {
+          const agentResult = await query('SELECT email FROM users WHERE id = $1', [ticket.assignee_id]);
           if (agentResult.rows.length > 0) {
             await sendSlaBreachEmail(agentResult.rows[0].email, ticket, breachType);
           }
@@ -97,8 +96,8 @@ export async function checkSlaBreaches(): Promise<void> {
 }
 
 // Helper function to check if a ticket breach has already been notified
-async function hasBreachBeenNotified(ticketId: number): Promise<boolean> {
-  const result = await db.query(
+async function hasBreachBeenNotified(ticketId: string): Promise<boolean> {
+  const result = await query(
     'SELECT * FROM sla_breach_notifications WHERE ticket_id = $1',
     [ticketId]
   );
@@ -106,18 +105,18 @@ async function hasBreachBeenNotified(ticketId: number): Promise<boolean> {
 }
 
 // Helper function to log SLA breach notification
-async function logSlaBreachNotification(ticketId: number, breachType: string): Promise<void> {
-  await db.query(
+async function logSlaBreachNotification(ticketId: string, breachType: string): Promise<void> {
+  await query(
     'INSERT INTO sla_breach_notifications (ticket_id, breach_type) VALUES ($1, $2)',
     [ticketId, breachType]
   );
 }
 
 // Helper function to get users that should be notified about SLA breaches
-async function getUsersToNotifyForSla(ticketId: number, assignedAgentId?: number): Promise<number[]> {
+async function getUsersToNotifyForSla(ticketId: string, assignedAgentId?: string): Promise<string[]> {
   // Get supervisors and managers
-  const supervisorResult = await db.query(
-    "SELECT id FROM users WHERE role IN ('supervisor', 'manager') AND status = 'active'"
+  const supervisorResult = await query(
+    "SELECT id FROM users WHERE role IN ('MANAGER', 'ADMIN') AND active = true"
   );
   
   const supervisorIds = supervisorResult.rows.map(row => row.id);
@@ -144,5 +143,8 @@ export const slaService = {
     } catch (error) {
       console.error('Error checking SLA breaches:', error);
     }
-  }
+  },
+  
+  calculateSlaDueDates,
+  checkSlaBreaches
 };

@@ -37,12 +37,16 @@
 //   );
 // }
 
+
 // src/app/layout.tsx (update existing file)
 import { Inter } from 'next/font/google';
 import './globals.css';
 import QueryProvider from '@/providers/QueryProvider';
 import { Metadata } from 'next';
 import DevNavigation from '@/components/dev/DevNavigation';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/authOptions';
+import MainLayout from '@/components/layout/MainLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -70,14 +74,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="page-content">
-          <QueryProvider>
-            <main className="main-container">
-              {children}
-            </main>
-            <DevNavigation />
-          </QueryProvider>
-        </div>
+        <QueryProvider>
+          <MainLayout>
+            {children}
+          </MainLayout>
+          <DevNavigation />
+        </QueryProvider>
       </body>
     </html>
   );

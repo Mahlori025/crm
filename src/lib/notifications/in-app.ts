@@ -1,10 +1,10 @@
 // src/lib/notifications/in-app.ts
-import { db } from '../db';
+import { query } from '../db';
 
 type NotificationType = 'ticket_assigned' | 'sla_breached' | 'ticket_updated' | 'ticket_comment';
 
 export async function createNotification(
-  userId: number,
+  userId: string,
   type: NotificationType,
   title: string,
   message: string,
@@ -12,9 +12,9 @@ export async function createNotification(
   metadata: Record<string, any> = {}
 ): Promise<void> {
   try {
-    await db.query(
+    await query(
       `INSERT INTO notifications (
-        user_id, type, title, message, link_url, metadata
+        user_id, type, title, content, link_url, metadata
       ) VALUES ($1, $2, $3, $4, $5, $6)`,
       [userId, type, title, message, linkUrl, JSON.stringify(metadata)]
     );
@@ -24,11 +24,11 @@ export async function createNotification(
 }
 
 export async function notifyTicketAssigned(
-  userId: number,
-  ticketId: number
+  userId: string,
+  ticketId: string
 ): Promise<void> {
   // Get ticket details
-  const ticketResult = await db.query('SELECT title FROM tickets WHERE id = $1', [ticketId]);
+  const ticketResult = await query('SELECT title FROM tickets WHERE id = $1', [ticketId]);
   if (ticketResult.rows.length === 0) return;
   
   const ticketTitle = ticketResult.rows[0].title;
@@ -44,12 +44,12 @@ export async function notifyTicketAssigned(
 }
 
 export async function notifySlaBreached(
-  userId: number,
-  ticketId: number,
+  userId: string,
+  ticketId: string,
   breachType: 'response' | 'resolution'
 ): Promise<void> {
   // Get ticket details
-  const ticketResult = await db.query('SELECT title FROM tickets WHERE id = $1', [ticketId]);
+  const ticketResult = await query('SELECT title FROM tickets WHERE id = $1', [ticketId]);
   if (ticketResult.rows.length === 0) return;
   
   const ticketTitle = ticketResult.rows[0].title;
@@ -66,13 +66,13 @@ export async function notifySlaBreached(
 }
 
 export async function notifyTicketComment(
-  userId: number,
-  ticketId: number,
-  commenterId: number,
+  userId: string,
+  ticketId: string,
+  commenterId: string,
   commenterName: string
 ): Promise<void> {
   // Get ticket details
-  const ticketResult = await db.query('SELECT title FROM tickets WHERE id = $1', [ticketId]);
+  const ticketResult = await query('SELECT title FROM tickets WHERE id = $1', [ticketId]);
   if (ticketResult.rows.length === 0) return;
   
   const ticketTitle = ticketResult.rows[0].title;
@@ -87,10 +87,10 @@ export async function notifyTicketComment(
   );
 }
 
-export async function markNotificationAsRead(notificationId: number): Promise<void> {
+export async function markNotificationAsRead(notificationId: string): Promise<void> {
   try {
-    await db.query(
-      'UPDATE notifications SET read_at = NOW() WHERE id = $1',
+    await query(
+      'UPDATE notifications SET read = true WHERE id = $1',
       [notificationId]
     );
   } catch (error) {
@@ -98,10 +98,10 @@ export async function markNotificationAsRead(notificationId: number): Promise<vo
   }
 }
 
-export async function getUserUnreadNotifications(userId: number): Promise<any[]> {
+export async function getUserUnreadNotifications(userId: string): Promise<any[]> {
   try {
-    const result = await db.query(
-      'SELECT * FROM notifications WHERE user_id = $1 AND read_at IS NULL ORDER BY created_at DESC',
+    const result = await query(
+      'SELECT * FROM notifications WHERE user_id = $1 AND read = false ORDER BY created_at DESC',
       [userId]
     );
     return result.rows;
